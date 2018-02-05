@@ -11,4 +11,10 @@
         android:layout_height="wrap_content"
         android:text="Hello World!"/>
 
+    <Button
+        android:text="test"
+        android:onClick="test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>

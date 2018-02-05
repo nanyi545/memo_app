@@ -11,6 +11,6 @@
 		},
 		{
 			"file":"eg_bulbon.gif"
-		},
+		}
 	]
 }

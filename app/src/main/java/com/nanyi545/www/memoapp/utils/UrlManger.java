@@ -1,5 +1,7 @@
 package com.nanyi545.www.memoapp.utils;
 
+import com.nanyi545.www.memoapp.data.Page;
+
 /**
  * Created by Administrator on 2018/2/5.
  */
@@ -12,5 +14,10 @@ public class UrlManger {
     public static String getIndexUrl(){
         return BASE_URL_RAW+"folders_list.txt";
     }
+
+    public static String getHtmlPageIndexUrl(Page page){
+        return BASE_URL_RAW+page.toString();
+    }
+
 
 }

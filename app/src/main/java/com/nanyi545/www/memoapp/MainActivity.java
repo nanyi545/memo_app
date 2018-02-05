@@ -2,12 +2,14 @@ package com.nanyi545.www.memoapp;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.nanyi545.www.memoapp.data.TotalIndex;
 import com.nanyi545.www.memoapp.utils.FileDownloaderTask;
 import com.nanyi545.www.memoapp.utils.FilesManager;
+import com.nanyi545.www.memoapp.utils.PageDetailActivity;
 import com.nanyi545.www.memoapp.utils.UrlManger;
 
 import java.io.File;
@@ -38,12 +40,16 @@ public class MainActivity extends Activity {
                         }
                         tv.setText(content);
                         index=TotalIndex.getInstance(content);
-                        tv.setText(index.data.get(0).category_name);
+//                        tv.setText(index.data.get(0).category_name);
                     }
                 });
         getIndexTask.execute();
     }
 
+
+    public void test(View view){
+        PageDetailActivity.start(view.getContext(),index.data.get(1).category_data.get(0));
+    }
 
 
 }
