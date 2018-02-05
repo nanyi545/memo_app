@@ -32,7 +32,7 @@ public class PageDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         page= (Page) getIntent().getSerializableExtra(PAGE_KEY);
         setContentView(R.layout.activity_page_detail);
-        Log.i("aaa","--------[][][]----------"+UrlManger.getHtmlPageIndexUrl(page));
+        Log.i("aaa","--------[][][]----------"+UrlManger.getHtmlPageIndexUrl(page)+"   }} "+page.getFile().getAbsolutePath());
         task=new FileDownloaderTask(this, UrlManger.getHtmlPageIndexUrl(page), page.getFile(),
                 new FileDownloaderTask.OnDownloadCompleteListener(){
                     @Override
