@@ -5,14 +5,23 @@
 			"category_name":"string related",
 			"category_data":[
 				{
-					"path":"string_related/PRN_evaluator",
+					"path":"string_related/prn_evaluator/",
 					"type":"txt"
 				},
 				{
-					"path":"string_related/longest_substring",
+					"path":"string_related/longest_substring/",
 					"type":"txt"
 				}
 			]
-		}
+		},
+		{
+			"category_name":"test web",
+			"category_data":[
+				{
+					"path":"test_web/light/",
+					"type":"html"
+				}
+			]
+		},
 	]
 }

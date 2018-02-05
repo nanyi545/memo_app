@@ -1,0 +1,16 @@
+{
+	"data": 
+	[
+		{
+			"file":"js4_light.html"
+
+		},
+		{
+			"file":"eg_bulboff.gif"
+
+		},
+		{
+			"file":"eg_bulbon.gif"
+		},
+	]
+}

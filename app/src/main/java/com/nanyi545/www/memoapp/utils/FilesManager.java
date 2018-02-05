@@ -1,5 +1,7 @@
 package com.nanyi545.www.memoapp.utils;
 
+import com.nanyi545.www.memoapp.data.Page;
+
 import java.io.File;
 
 /**
@@ -19,6 +21,11 @@ public class FilesManager {
     }
 
 
+    private static final String DATA_FOLDER_NAME="data_folder";
+    public static File getPageFile(Page page){
+        File file=new File(MemoApp.getInstance().getFilesDir().getAbsolutePath() + File.separator  + DATA_FOLDER_NAME + File.separator + page.toString());
+        return file;
+    }
 
 
 

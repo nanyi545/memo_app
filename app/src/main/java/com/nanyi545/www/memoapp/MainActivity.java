@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.nanyi545.www.memoapp.data.TotalIndex;
 import com.nanyi545.www.memoapp.utils.FileDownloaderTask;
 import com.nanyi545.www.memoapp.utils.FilesManager;
 import com.nanyi545.www.memoapp.utils.UrlManger;
@@ -16,6 +18,8 @@ public class MainActivity extends Activity {
 
     FileDownloaderTask  getIndexTask;
     TextView tv;
+
+    TotalIndex index;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +37,8 @@ public class MainActivity extends Activity {
                             e.printStackTrace();
                         }
                         tv.setText(content);
+                        index=TotalIndex.getInstance(content);
+                        tv.setText(index.data.get(0).category_name);
                     }
                 });
         getIndexTask.execute();
