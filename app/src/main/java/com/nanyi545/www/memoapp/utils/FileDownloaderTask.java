@@ -64,6 +64,11 @@ public class FileDownloaderTask extends AsyncTask<String ,Void ,File> {
             // this will be useful so that you can show a typical 0-100% progress bar
             int fileLength = connection.getContentLength();
 
+            if(!destination.exists()){
+                destination.getParentFile().mkdirs();
+                destination.createNewFile();
+            }
+
             // download the file
             InputStream input = new BufferedInputStream(connection.getInputStream());
             OutputStream output = new FileOutputStream(destination);
@@ -82,12 +87,12 @@ public class FileDownloaderTask extends AsyncTask<String ,Void ,File> {
             output.close();
             input.close();
         } catch (IOException e) {
+//            Log.i("aaa","--------task exception--------"+Log.getStackTraceString(e));
             progress.dismiss();
             e.printStackTrace();
         }
         return destination;
     }
-
 
 
     @Override

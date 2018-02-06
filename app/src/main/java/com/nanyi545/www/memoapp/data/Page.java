@@ -1,6 +1,7 @@
 package com.nanyi545.www.memoapp.data;
 
 import com.nanyi545.www.memoapp.utils.FilesManager;
+import com.nanyi545.www.memoapp.utils.UrlManger;
 
 import java.io.File;
 import java.io.Serializable;
@@ -39,5 +40,14 @@ public class Page implements Serializable {
         return FilesManager.getPageFile(this);
     }
 
+    /**
+     * @return  base folder / base url for  {@link #TYPE_WEB}
+     */
+    public File getBaseFolder(){
+        return getFile().getParentFile();
+    }
+    public String getBaseUrl(){
+        return UrlManger.getBaseUrlRaw() + path ;
+    }
 
 }

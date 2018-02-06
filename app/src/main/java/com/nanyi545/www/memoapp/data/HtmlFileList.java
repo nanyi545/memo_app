@@ -1,5 +1,7 @@
 package com.nanyi545.www.memoapp.data;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 
 import java.util.List;
@@ -10,10 +12,20 @@ import java.util.List;
 
 public class HtmlFileList {
 
-    public List<FileUrl>   data;
+    public List<FileUrl> data;
 
     public static class FileUrl{
         public String file;
+    }
+
+    public String[] getFileArr(){
+        String[] ret=new String[data.size()];
+        int index=0;
+        for(FileUrl item:data){
+            ret[index]=new String(item.file);
+            index+=1;
+        }
+        return ret;
     }
 
 
