@@ -111,7 +111,6 @@ public class FileListDownTask extends AsyncTask <String,Void,String> {
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
         progress.dismiss();
-        Log.i("aaa","onPostExecute      file:///" + htmlFile.getAbsolutePath());
         targetWV.loadUrl("file:///" + htmlFile.getAbsolutePath());
     }
 

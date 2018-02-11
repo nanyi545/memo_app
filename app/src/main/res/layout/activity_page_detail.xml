@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
 
-    tools:context="com.nanyi545.www.memoapp.utils.PageDetailActivity">
+    tools:context="com.nanyi545.www.memoapp.ui.detail_page.PageDetailActivity">
 
     <WebView
         android:visibility="gone"

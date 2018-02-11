@@ -1,10 +1,9 @@
-package com.nanyi545.www.memoapp.utils;
+package com.nanyi545.www.memoapp.ui.detail_page;
 
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -15,7 +14,10 @@ import android.widget.TextView;
 import com.nanyi545.www.memoapp.R;
 import com.nanyi545.www.memoapp.data.HtmlFileList;
 import com.nanyi545.www.memoapp.data.Page;
-import com.nanyi545.www.memoapp.data.TotalIndex;
+import com.nanyi545.www.memoapp.utils.FileDownloaderTask;
+import com.nanyi545.www.memoapp.utils.FileListDownTask;
+import com.nanyi545.www.memoapp.utils.NetWork;
+import com.nanyi545.www.memoapp.utils.UrlManger;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,8 +56,9 @@ public class PageDetailActivity extends AppCompatActivity {
             loadLocalData();
         }
 
-
     }
+
+
 
     private void setUpView(){
 
@@ -149,7 +152,6 @@ public class PageDetailActivity extends AppCompatActivity {
 
 
     private void loadLocalWebpage(){
-        Log.i("aaa","loadLocalWebpage      file:///" + page.getContentHtmlFile().getAbsolutePath());
         mWebview.loadUrl("file:///" + page.getContentHtmlFile().getAbsolutePath());
     }
 

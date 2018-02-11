@@ -1,15 +1,18 @@
-package com.nanyi545.www.memoapp;
+package com.nanyi545.www.memoapp.ui.main_page;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.nanyi545.www.memoapp.R;
 import com.nanyi545.www.memoapp.data.TotalIndex;
 import com.nanyi545.www.memoapp.utils.FileDownloaderTask;
 import com.nanyi545.www.memoapp.utils.FilesManager;
-import com.nanyi545.www.memoapp.utils.PageDetailActivity;
+import com.nanyi545.www.memoapp.ui.detail_page.PageDetailActivity;
 import com.nanyi545.www.memoapp.utils.UrlManger;
 
 import java.io.File;
@@ -19,15 +22,20 @@ public class MainActivity extends Activity {
 
 
     FileDownloaderTask  getIndexTask;
-    TextView tv;
 
+
+    RecyclerView mainRv;
+    TotalIndexAdapter adapter;
     TotalIndex index;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        tv= (TextView) findViewById(R.id.hello);
+        mainRv= (RecyclerView) findViewById(R.id.main_rv);
+        mainRv.setLayoutManager(new LinearLayoutManager(this));
+
         getIndexTask=new FileDownloaderTask(this, UrlManger.getIndexUrl(), FilesManager.getIndexFile(),
                 new FileDownloaderTask.OnDownloadCompleteListener(){
                     @Override
@@ -38,9 +46,11 @@ public class MainActivity extends Activity {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        tv.setText(content);
+
                         index=TotalIndex.getInstance(content);
-//                        tv.setText(index.data.get(0).category_name);
+                        adapter=new TotalIndexAdapter(index);
+                        mainRv.setAdapter(adapter);
+
                     }
                 });
         getIndexTask.execute();

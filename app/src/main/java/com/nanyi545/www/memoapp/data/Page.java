@@ -58,11 +58,10 @@ public class Page implements Serializable {
         return getFile().getParentFile();
     }
 
-
-
     public String getBaseUrl(){
         return UrlManger.getBaseUrlRaw() + path ;
     }
+
 
 
 
