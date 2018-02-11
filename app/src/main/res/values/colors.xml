@@ -3,4 +3,22 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+
+    <!-- Material design   gray -->
+    <color name="Gray50">#FAFAFA</color>
+    <color name="Gray100">#F5F5F5</color>
+    <color name="Gray200">#EEEEEE</color>
+    <color name="Gray300">#E0E0E0</color>
+    <color name="Gray400">#BDBDBD</color>
+    <color name="Gray450">#BBBBBB</color>
+    <color name="Gray500">#9E9E9E</color>
+    <color name="Gray600">#757575</color>
+    <color name="Gray700">#616161</color>
+    <color name="Gray800">#424242</color>
+    <color name="Gray900">#212121</color>
+    <color name="Gray200T">#22EEEEEE</color>
+    <color name="Gray800T">#22424242</color>
+    <color name="Gray1000">#f1f1f1</color>
+
 </resources>

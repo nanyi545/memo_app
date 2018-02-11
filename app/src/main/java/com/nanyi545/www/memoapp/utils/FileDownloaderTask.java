@@ -58,6 +58,7 @@ public class FileDownloaderTask extends AsyncTask<String ,Void ,File> {
     protected File doInBackground(String... params) {
 
         try {
+            Log.i("aaa","urlStr:"+urlStr);
             URL url = new URL( urlStr );
             URLConnection connection = url.openConnection();
             connection.connect();
@@ -99,6 +100,7 @@ public class FileDownloaderTask extends AsyncTask<String ,Void ,File> {
     protected void onPostExecute(File file) {
         super.onPostExecute(file);
         progress.dismiss();
+        Log.i("aaa","file:"+file.getAbsolutePath());
         if(onDownloadCompleteListener!=null) {
             onDownloadCompleteListener.onPostExecute(file);
         }

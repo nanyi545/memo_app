@@ -19,7 +19,7 @@ public class UrlManger {
         return BASE_URL_RAW+"folders_list.txt";
     }
 
-    public static String getHtmlPageIndexUrl(Page page){
+    public static String getContentUrl(Page page){
         return BASE_URL_RAW+page.toString();
     }
 

@@ -44,11 +44,7 @@ public class PageDetailActivity extends AppCompatActivity {
         page= (Page) getIntent().getSerializableExtra(PAGE_KEY);
         setContentView(R.layout.activity_page_detail);
         mWebview= (WebView) findViewById(R.id.m_webview);
-
-
-
         setUpView();
-
 
         if(NetWork.isNetworkOnline(this)){
             loadRemoteData();
@@ -61,53 +57,39 @@ public class PageDetailActivity extends AppCompatActivity {
 
 
     private void setUpView(){
-
         switch(page.getType())
         {
             case Page.TYPE_WEB:
-
                 mWebview.setVisibility(View.VISIBLE);
                 mWebview.setWebViewClient(new WebViewClient());
                 mWebview.setWebChromeClient(new WebChromeClient());  // this is needed to trigger alert !!
                 WebSettings webSettings = mWebview.getSettings();
                 webSettings.setJavaScriptEnabled(true);
-
                 break;
-
             case Page.TYPE_TXT:
-
                 findViewById(R.id.text_holer).setVisibility(View.VISIBLE);
                 txtTv= (TextView) findViewById(R.id.text_content);
-
                 break;
-
-
         }
-
-
     }
 
 
 
     private void loadRemoteData(){
-        switch(page.getType())
-        {
+        switch(page.getType()) {
             case Page.TYPE_WEB:
                 loadRemoteWebPage();
                 break;
-
-
-
+            case Page.TYPE_TXT:
+                loadRemoteTxt();
+                break;
         }
-
-
-
     }
 
 
-    private void loadRemoteWebPage(){
 
-        task=new FileDownloaderTask(this, UrlManger.getHtmlPageIndexUrl(page), page.getFile(),
+    private void loadRemoteWebPage(){
+        task=new FileDownloaderTask(this, UrlManger.getContentUrl(page), page.getFile(),
                 new FileDownloaderTask.OnDownloadCompleteListener(){
                     @Override
                     public void onPostExecute(File file) {
@@ -117,24 +99,36 @@ public class PageDetailActivity extends AppCompatActivity {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-
                         HtmlFileList list= HtmlFileList.getInstance(content);
-
                         FileListDownTask task=new FileListDownTask( page.getBaseUrl(), page.getBaseFolder() , PageDetailActivity.this , mWebview);
                         task.execute(list.getFileArr());
-
                     }
                 });
-
         task.execute();
-
     }
 
 
     private void loadRemoteTxt(){
-
-
+        task=new FileDownloaderTask(this, UrlManger.getContentUrl(page), page.getFile(),
+                new FileDownloaderTask.OnDownloadCompleteListener(){
+                    @Override
+                    public void onPostExecute(File file) {
+                        String content = "IOException";
+                        try {
+                            content = org.apache.commons.io.FileUtils.readFileToString(file, "utf-8");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        txtTv.setText(content);
+                    }
+                });
+        task.execute();
     }
+
+
+
+
+
 
 
     private void loadLocalData(){
@@ -143,19 +137,20 @@ public class PageDetailActivity extends AppCompatActivity {
             case Page.TYPE_WEB:
                 loadLocalWebpage();
                 break;
-
-
-
+            case Page.TYPE_TXT:
+                loadLocalTxt();
+                break;
         }
     }
-
 
 
     private void loadLocalWebpage(){
         mWebview.loadUrl("file:///" + page.getContentHtmlFile().getAbsolutePath());
     }
 
+    private void loadLocalTxt(){
 
+    }
 
 
 }

@@ -46,11 +46,9 @@ public class MainActivity extends Activity {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-
                         index=TotalIndex.getInstance(content);
                         adapter=new TotalIndexAdapter(index);
                         mainRv.setAdapter(adapter);
-
                     }
                 });
         getIndexTask.execute();
