@@ -5,14 +5,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+
     tools:context="com.nanyi545.www.memoapp.utils.PageDetailActivity">
 
     <WebView
+        android:visibility="gone"
         android:id="@+id/m_webview"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-
     </WebView>
+
+
+    <ScrollView
+        android:id="@+id/text_holer"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/text_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </ScrollView>
+
+
+
+
 
 </LinearLayout>

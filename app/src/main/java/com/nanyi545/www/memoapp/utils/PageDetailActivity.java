@@ -5,10 +5,12 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.TextView;
 
 import com.nanyi545.www.memoapp.R;
 import com.nanyi545.www.memoapp.data.HtmlFileList;
@@ -32,6 +34,7 @@ public class PageDetailActivity extends AppCompatActivity {
     FileDownloaderTask task;
 
     WebView mWebview;
+    TextView txtTv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,13 +42,67 @@ public class PageDetailActivity extends AppCompatActivity {
         page= (Page) getIntent().getSerializableExtra(PAGE_KEY);
         setContentView(R.layout.activity_page_detail);
         mWebview= (WebView) findViewById(R.id.m_webview);
-        mWebview.setWebViewClient(new WebViewClient());
-        mWebview.setWebChromeClient(new WebChromeClient());  // this is needed to trigger alert !!
-
-        WebSettings webSettings = mWebview.getSettings();
-        webSettings.setJavaScriptEnabled(true);
 
 
+
+        setUpView();
+
+
+        if(NetWork.isNetworkOnline(this)){
+            loadRemoteData();
+        } else {
+            loadLocalData();
+        }
+
+
+    }
+
+    private void setUpView(){
+
+        switch(page.getType())
+        {
+            case Page.TYPE_WEB:
+
+                mWebview.setVisibility(View.VISIBLE);
+                mWebview.setWebViewClient(new WebViewClient());
+                mWebview.setWebChromeClient(new WebChromeClient());  // this is needed to trigger alert !!
+                WebSettings webSettings = mWebview.getSettings();
+                webSettings.setJavaScriptEnabled(true);
+
+                break;
+
+            case Page.TYPE_TXT:
+
+                findViewById(R.id.text_holer).setVisibility(View.VISIBLE);
+                txtTv= (TextView) findViewById(R.id.text_content);
+
+                break;
+
+
+        }
+
+
+    }
+
+
+
+    private void loadRemoteData(){
+        switch(page.getType())
+        {
+            case Page.TYPE_WEB:
+                loadRemoteWebPage();
+                break;
+
+
+
+        }
+
+
+
+    }
+
+
+    private void loadRemoteWebPage(){
 
         task=new FileDownloaderTask(this, UrlManger.getHtmlPageIndexUrl(page), page.getFile(),
                 new FileDownloaderTask.OnDownloadCompleteListener(){
@@ -56,7 +113,6 @@ public class PageDetailActivity extends AppCompatActivity {
                             content = org.apache.commons.io.FileUtils.readFileToString(file, "utf-8");
                         } catch (IOException e) {
                             e.printStackTrace();
-//                            Log.i("aaa","------------------"+Log.getStackTraceString(e));
                         }
 
                         HtmlFileList list= HtmlFileList.getInstance(content);
@@ -69,9 +125,32 @@ public class PageDetailActivity extends AppCompatActivity {
 
         task.execute();
 
+    }
+
+
+    private void loadRemoteTxt(){
+
+
+    }
+
+
+    private void loadLocalData(){
+        switch(page.getType())
+        {
+            case Page.TYPE_WEB:
+                loadLocalWebpage();
+                break;
 
 
 
+        }
+    }
+
+
+
+    private void loadLocalWebpage(){
+        Log.i("aaa","loadLocalWebpage      file:///" + page.getContentHtmlFile().getAbsolutePath());
+        mWebview.loadUrl("file:///" + page.getContentHtmlFile().getAbsolutePath());
     }
 
 

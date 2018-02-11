@@ -14,6 +14,9 @@ public class Page implements Serializable {
 
     public String path;
     public String type;
+    public String getType() {
+        return type;
+    }
 
     public static final String TYPE_TXT="txt";
     public static final String TYPE_IMG="png";
@@ -41,13 +44,26 @@ public class Page implements Serializable {
     }
 
     /**
+     * get content.html
+     * only for  {@link #TYPE_WEB}
+     * **/
+    public File getContentHtmlFile(){
+        return new File(getBaseFolder().getAbsolutePath()+ File.separator + CONTENT + "."+ TYPE_WEB );
+    }
+
+    /**
      * @return  base folder / base url for  {@link #TYPE_WEB}
      */
     public File getBaseFolder(){
         return getFile().getParentFile();
     }
+
+
+
     public String getBaseUrl(){
         return UrlManger.getBaseUrlRaw() + path ;
     }
+
+
 
 }
