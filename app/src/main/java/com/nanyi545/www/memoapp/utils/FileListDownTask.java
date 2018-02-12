@@ -41,20 +41,26 @@ public class FileListDownTask extends AsyncTask <String,Void,String> {
         targetWV=webview;
     }
 
+
+    public FileListDownTask(String baseUrl, File holder, Activity host ) {
+        this.baseUrl = baseUrl;
+        this.holder = holder;
+    }
+
+
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        progress.show();
+        if(progress!=null) progress.show();
     }
 
     @Override
     protected String doInBackground(String... params) {
-
         count = params.length;
         for (String str:params){
+            Log.i("aaa","--down:"+str);
             downFile(str);
         }
-
         return "";
     }
 
@@ -99,7 +105,7 @@ public class FileListDownTask extends AsyncTask <String,Void,String> {
             output.close();
             input.close();
         } catch (IOException e) {
-            progress.dismiss();
+            if(progress!=null) progress.dismiss();
             e.printStackTrace();
         }
 
@@ -110,8 +116,8 @@ public class FileListDownTask extends AsyncTask <String,Void,String> {
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
-        progress.dismiss();
-        targetWV.loadUrl("file:///" + htmlFile.getAbsolutePath());
+        if(progress!=null) progress.dismiss();
+        if(targetWV!=null) targetWV.loadUrl("file:///" + htmlFile.getAbsolutePath());
     }
 
 

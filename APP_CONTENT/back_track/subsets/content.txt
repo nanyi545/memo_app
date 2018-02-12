@@ -1,0 +1,12 @@
+{
+	"data": 
+	[
+		{
+			"file":"content.html"
+
+		},
+		{
+			"file":"subset.png"
+		}
+	]
+}

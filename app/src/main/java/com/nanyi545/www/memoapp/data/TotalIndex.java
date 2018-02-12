@@ -1,7 +1,13 @@
 package com.nanyi545.www.memoapp.data;
 
 import com.google.gson.Gson;
+import com.nanyi545.www.memoapp.ui.detail_page.PageDetailActivity;
+import com.nanyi545.www.memoapp.utils.FileDownloaderTask;
+import com.nanyi545.www.memoapp.utils.FileListDownTask;
+import com.nanyi545.www.memoapp.utils.UrlManger;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -22,5 +28,27 @@ public class TotalIndex {
         index=gson.fromJson(json,TotalIndex.class);
         return index;
     }
+
+
+    public int getTotalCount(){
+        int count=0;
+        for(SubCategory sub:data){
+            for (Page page:sub.category_data){
+                count+=1;
+            }
+        }
+        return count;
+    }
+
+
+
+
+
+
+
+
+
+
+
 
 }

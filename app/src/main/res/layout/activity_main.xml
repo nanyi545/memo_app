@@ -6,6 +6,25 @@
               android:orientation="vertical"
               tools:context=".ui.main_page.MainActivity">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="32dp">
+        <TextView
+            android:gravity="center"
+            android:text="reload all"
+            android:onClick="click"
+            android:id="@+id/force_reload_all"
+            android:background="?attr/selectableItemBackground"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"/>
+        <View
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/Gray400"
+            />
+    </RelativeLayout>
+
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/main_rv"

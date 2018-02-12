@@ -127,10 +127,6 @@ public class PageDetailActivity extends AppCompatActivity {
 
 
 
-
-
-
-
     private void loadLocalData(){
         switch(page.getType())
         {
@@ -149,7 +145,14 @@ public class PageDetailActivity extends AppCompatActivity {
     }
 
     private void loadLocalTxt(){
-
+        File local=page.getFile();
+        String content = "IOException";
+        try {
+            content = org.apache.commons.io.FileUtils.readFileToString(local, "utf-8");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        txtTv.setText(content);
     }
 
 

@@ -48,10 +48,18 @@ public class FileDownloaderTask extends AsyncTask<String ,Void ,File> {
         this.onDownloadCompleteListener=onDownloadCompleteListener;
     }
 
+
+    public FileDownloaderTask( String url, File destination,OnDownloadCompleteListener onDownloadCompleteListener) {
+        this.urlStr = url;
+        this.destination = destination;
+        this.onDownloadCompleteListener=onDownloadCompleteListener;
+    }
+
+
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        progress.show();
+        if(progress!=null) progress.show();
     }
 
     @Override
@@ -89,7 +97,7 @@ public class FileDownloaderTask extends AsyncTask<String ,Void ,File> {
             input.close();
         } catch (IOException e) {
 //            Log.i("aaa","--------task exception--------"+Log.getStackTraceString(e));
-            progress.dismiss();
+            if(progress!=null) progress.dismiss();
             e.printStackTrace();
         }
         return destination;
@@ -99,7 +107,7 @@ public class FileDownloaderTask extends AsyncTask<String ,Void ,File> {
     @Override
     protected void onPostExecute(File file) {
         super.onPostExecute(file);
-        progress.dismiss();
+        if(progress!=null) progress.dismiss();
         Log.i("aaa","file:"+file.getAbsolutePath());
         if(onDownloadCompleteListener!=null) {
             onDownloadCompleteListener.onPostExecute(file);
