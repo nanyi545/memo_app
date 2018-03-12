@@ -7,14 +7,15 @@
               tools:context=".ui.main_page.MainActivity">
 
     <RelativeLayout
+        android:background="?attr/selectableItemBackground"
         android:onClick="click"
         android:id="@+id/force_reload_all"
         android:layout_width="match_parent"
         android:layout_height="48dp">
         <TextView
+            android:textColor="@color/colorAccent"
             android:layout_centerInParent="true"
             android:text="reload all"
-            android:background="?attr/selectableItemBackground"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <View

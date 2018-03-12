@@ -1,0 +1,83 @@
+-------------------------------------------------------------------
+when activty has been launched ... an infinite loop is running ...
+
+
+--------------------------leak--------------------------------------
+
+----leak example 1---
+
+private static Drawable sBackground;
+
+then --> oncreate:
+
+  if (sBackground == null) {
+    sBackground = getDrawable(R.drawable.large_bitmap);
+  }
+
+  label.setBackgroundDrawable(sBackground);
+
+
+----leak example 2---
+
+
+In Java,     [non-static inner]  and  [anonymous classes]   hold an implicit reference to their outer class. Static inner classes, on the other hand, do not.  
+
+--> why ??     
+1  how to access: Outer.this.method();   
+2 can only be created in a instance of Outer class,   Outer$1     
+
+
+  private final Handler mLeakyHandler = new Handler() {
+    @Override
+    public void handleMessage(Message msg) {
+      // ...
+    }
+  }
+
+
+    mLeakyHandler.postDelayed(new Runnable() {
+      @Override                           
+      public void run() { /* ... */ }
+    }, 1000 * 60 * 10);          //  leaked within 10 minutes.... 
+
+
+both [message object] and the [anonymous Runnable]  hold a reference to the activity's Handler, which holds an implicit reference to its outer class (the SampleActivity, in this case).
+
+
+solution:  use  Static Runnable /  Static Handler ....
+
+
+    private static class StaticRunnable implements Runnable {
+        private final WeakReference<LeakActivity> mwActivity;
+        public StaticRunnable(LeakActivity activity){
+            mwActivity = new WeakReference<LeakActivity>(activity);  
+            //  WeakReference. get() will return null when referenced object was gc-ed.
+        }
+        @Override
+        public void run() {
+            LeakActivity activity = mwActivity.get();
+            if (activity != null) {
+                activity.tv.setText("non-leak-handler + static runnable");
+            }else {
+                Log.i("LEAK","WEAK-reference get null return, GC occurred");
+            }
+        }
+    }
+
+
+-------------------------------------------------------------------------------
+
+remove callbacks in onDestroy() ...
+
+https://stackoverflow.com/questions/5883635/how-to-remove-all-callbacks-from-a-handler
+
+------------
+handler.removeCallbacksAndMessages(null);
+handler.removeCallbacks(runnable);
+view.removeCallbacks(runnable);
+------------
+
+In the docs for removeCallbacksAndMessages it says...
+
+Remove any pending posts of callbacks and sent messages whose obj is token. If token is null, all callbacks and messages will be removed.
+

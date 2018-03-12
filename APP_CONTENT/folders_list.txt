@@ -7,6 +7,10 @@
 				{
 					"path":"android/OnRestoreInstanceState/",
 					"type":"txt"
+				},
+				{
+					"path":"android/leaks/",
+					"type":"txt"
 				}
 			]
 		},
