@@ -1,0 +1,60 @@
+https://stackoverflow.com/questions/4096169/onsaveinstancestate-and-onrestoreinstancestate
+
+onRestoreInstanceState() is called only when recreating activity after it was killed by the OS. Such situation happen when:
+    * orientation of the device changes (your activity is destroyed and recreated)
+    * there is another activity in front of yours and at some point the OS kills your activity in order to free memory (for example). Next time when you start your activity onRestoreInstanceState() will be called.
+
+
+
+
+(1)-------------->  activity change orientation :
+ onSaveInstanceState()   --> onDestroy()     --> onCreate()   ---> onRestoreInstanceState()
+
+** save view states in SavedState Class 
+
+
+https://stackoverflow.com/questions/28586443/android-view-onsaveinstancestate-not-called
+
+** Android didn't manage the onSaveInstanceState/onRestoreInstanceState if no [id] is set to the view. 
+
+
+
+(2)-------------->  when not enough resource to keep an activity  
+also call     onSaveInstanceState()   --> onDestroy()     --> onCreate()   ---> onRestoreInstanceState()
+
+
+********---------->
+you can imitate case (2)  by using case (1)
+
+
+********---------->
+** stuff can be recreated in onCreate(),  like fragments/network data/...
+** only stuff like user input, should be save in onSaveInstanceState()/onRestoreInstanceState()
+
+
+
+
+(3)---------->  After the rotate, onCreate() Fragment is called before onCreate()
+
+After the rotate, onCreate() Fragment is called before onCreate() FragmentActivity
+https://stackoverflow.com/questions/14093438/after-the-rotate-oncreate-fragment-is-called-before-oncreate-fragmentactivi
+------------------------------------------
+ACTIVITY onCreate (pre-super)
+super.onCreate( savedInstanceState );      --->  FRAGMENT onAttach(), this restores the fragments
+ACTIVITY onCreate (post-super)
+------------------------------------------
+
+https://stackoverflow.com/questions/13305861/fool-proof-way-to-handle-fragment-on-orientation-change
+
+if you do not want to restores the fragments:
+
+in activity: super.onCreate(null);
+
+
+
+(4)----------> java.lang.NullPointerException: Attempt to write to field |int android.support.v4.app.Fragment.mNextAnim| on a null object reference
+
+getSupportFragmentManager().beginTransaction().show(thirdHomeFragment).hide(newFinanceFragment).hide(newAccountFragment).commit();
+
+in hide(newFinanceFragment)  , if newFinanceFragment is null ---> java.lang.NullPointerException: Attempt to write to field |int android.support.v4.app.Fragment.mNextAnim| on a null object reference
+

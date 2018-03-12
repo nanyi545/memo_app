@@ -2,6 +2,15 @@
 	"data": 
 	[
 		{
+			"category_name":"android",
+			"category_data":[
+				{
+					"path":"android/OnRestoreInstanceState/",
+					"type":"txt"
+				}
+			]
+		},
+		{
 			"category_name":"string related",
 			"category_data":[
 				{
