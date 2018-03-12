@@ -1,0 +1,72 @@
+/**
+
+For example, given candidate set [2, 3, 6, 7] and target 7,
+A solution set is:
+
+[
+  [7],
+  [2, 2, 3]
+]
+
+**/
+
+
+public class Solution {
+    
+    
+    
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        
+        Arrays.sort(candidates); // make sure [2,2,3] [2,3,2],[3,2,2]  -->   only [2,2,3] is valid  
+        List<List<Integer>> list=new ArrayList();
+        List<Integer> tempList=new ArrayList();
+        backTrack(list,tempList,candidates,target);
+        
+        return list;
+    }
+    
+
+    public int findSum(List<Integer> list) {
+        int total=0;
+        for (int i=0;i<list.size();i++){
+            total+=list.get(i);
+        }
+        return total;
+    }
+    
+    
+    public void backTrack(List<List<Integer>> list,List<Integer> tempList,int[] candidates,int target){
+        if( findSum(tempList)==target ) {
+            list.add(new ArrayList(tempList));
+        } else {
+            
+            
+            for(int i=0;i<candidates.length;i++){
+                
+                // make sure [2,2,3] [2,3,2],[3,2,2]  -->   only [2,2,3] is valid  
+                if(tempList.size()>0 ) {
+                    if(tempList.get(tempList.size()-1)>candidates[i]) {
+                        continue;
+                    }
+                }
+                
+                if(findSum(tempList) > target) continue;    
+                
+                tempList.add(candidates[i]);
+                backTrack(list,tempList,candidates,target);
+                tempList.remove(tempList.size()-1);
+                
+            }
+            
+            
+        }
+        
+        
+    }
+    
+    
+    
+    
+    
+    
+}
