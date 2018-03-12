@@ -20,7 +20,7 @@
 				{
 					"path":"back_track/subsets/",
 					"type":"html"
-				}£¬
+				},
 				{
 					"path":"back_track/combination_sum/",
 					"type":"txt"
