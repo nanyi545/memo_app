@@ -37,6 +37,10 @@
 				{
 					"path":"back_track/combination_sum/",
 					"type":"txt"
+				},
+				{
+					"path":"back_track/permutation/",
+					"type":"txt"
 				}
 			]
 		},
