@@ -11,6 +11,10 @@
 				{
 					"path":"android/leaks/",
 					"type":"txt"
+				},
+				{
+					"path":"android/binder_aidl/",
+					"type":"html"
 				}
 			]
 		},
