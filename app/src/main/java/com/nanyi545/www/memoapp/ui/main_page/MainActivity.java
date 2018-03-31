@@ -52,6 +52,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         mainRv= (RecyclerView) findViewById(R.id.main_rv);
         mainRv.setLayoutManager(new LinearLayoutManager(this));
 

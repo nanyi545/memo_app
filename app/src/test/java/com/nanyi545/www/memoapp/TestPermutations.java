@@ -37,7 +37,6 @@ public class TestPermutations {
     }
 
 
-
     private static void print(ArrayList<ArrayList<Integer>> result){
         for (ArrayList<Integer> list:result){
             System.out.println(list);

@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <style type="text/css">
         .myimgs{  width:100%; height: auto; overflow:auto; }
+        .red{  color:red; }
+
     </style>
     <script></script>
 
@@ -65,10 +67,10 @@
         with methods defined in MyAidl.aidl plus throws <strong> ( e.g. sum() throws RemoteException ) </strong>
 
         MyAidlInterface contains 2 inner classes <br>
-        <strong> MyAidlInterface.Stub </strong> -->  (for the client side) <br>
+        <strong> MyAidlInterface.Stub </strong> -->  (to do the actual work on the server side) <br>
         public static abstract class Stub extends android.os.Binder implements XXXX.MyAidlInterface  <br>
-        ** an inner abstract class named Stub that extends Binder and implements methods from your AIDL interface. You must extend the Stub class and implement the methods. <br>
-        <strong> MyAidlInterface.Stub.Proxy </strong>-->  (for the server/service side)  <br>
+        ** an inner abstract class named Stub that extends Binder and implements methods from your AIDL interface. <div class="red">You must extend the Stub class and implement the methods to do the actual work .</div> <br>
+        <strong> MyAidlInterface.Stub.Proxy </strong>-->  (to be used on the client side)  <br>
         private static class Proxy implements XXXX.MyAidlInterface <br>
         proxy has field  -->  private android.os.IBinder mRemote;  -->proxy needs to call remote Stub class  <br><br>
 
