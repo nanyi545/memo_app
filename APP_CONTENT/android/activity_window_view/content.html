@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <style type="text/css">
+        .myimgs{  width:100%; height: auto; overflow:auto; }
+        .red{  color:red; }
+    </style>
+    <script></script>
+
+</head>
+<body>
+<script>
+</script>
+
+
+
+<div>
+
+    <h3>what-is-windowmanager</h3>
+    https://stackoverflow.com/questions/19846541/what-is-windowmanager-in-android
+    <p> The Android WindowManager is a system service, which is responsible for managing the z-ordered list of windows, which windows are visible,
+        and how they are laid out on screen. Among other things, it automatically performs window transitions and animations when opening or
+        closing an app or rotating the screen.<br>
+
+        Every activity has a Window that is used to display its content on the screen. When you call setContentView on an activity,
+        it attaches that view to the activity's default window. The default window fills the screen, so that your activity's window hides any other
+        activities -- the WindowManager will display whichever window is on top. So normally you don't need to worry about windows -
+        you just create an activity and Android will do the rest for you.<br>
+
+        But you need to interact with the WindowManager if you want to do something unusual like create floating windows that don't fill the screen.
+        If you want to create a floating window that is visible in front of other applications, you can't use an activity because your activity will
+        stop when another app comes to the foreground, and its window will be hidden or destroyed. Instead you need to display a window from a
+        background service. For example:
+    </p>
+
+    <pre><code>
+
+        myView=new View(this);
+
+        WindowManager.LayoutParams p = new WindowManager.LayoutParams(
+    // Shrink the window to wrap the content rather than filling the screen
+    WindowManager.LayoutParams.WRAP_CONTENT,
+    WindowManager.LayoutParams.WRAP_CONTENT,
+    // Display it on top of other application windows, but only for the current user
+    WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
+    // Don't let it grab the input focus
+    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+    // Make the underlying application window visible through any transparent parts
+    PixelFormat.TRANSLUCENT);
+
+// Define the position of the window within the screen
+p.gravity = Gravity.TOP | Gravity.RIGHT;
+p.x = 0;
+p.y = 100;
+
+WindowManager windowManager = (WindowManager)getSystemService(WINDOW_SERVICE);
+windowManager.addView(myView, p);
+
+        you need permission
+        &lt;uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+
+    </code></pre>
+
+
+
+    <h3>diagram</h3>
+    https://www.jianshu.com/p/c223b993b1ec
+    <img id="myimage1" src="diagram1.png" class="myimgs">
+
+    <div>
+        --------Q1------------<br>
+        在Activity里调用 <strong>WindowManager.LayoutParams wl = new WindowManager.LayoutParams();    getWindowManager().addView(mView,wl)</strong><br>
+        和
+        <strong>LayoutParams wmParams =addContentView(mView,wmParams); //activity里的方法 </strong> <br>
+        这两种方式背后的实现是怎样的,有什么区别?<br><br>
+
+
+        第一种情况会调用到WindowManagerGlobal.addView,这时会创建一个新的ViewRootImpl,和原来的DecoView不在一条View链上,所以它们之间的任何一个调用requestLayout(）不会影响到另一个。<br>
+
+        而addContentView(mView,wmParams)是直接将mView添加到DecoView中,会使ViewRootImpl链下的所有View重绘。<br>
+
+        activity.addContentView()<br>
+        -->mwindow.addContentView()<br>
+        ----> com.android.internal.policy.impl.PhoneWindow 中 mContentParent.addView(view, params);  //  viewGroup.addView( ... )<br><br><br>
+    </div>
+
+
+    <div>
+        --------Q2------------<br>
+        Dialog和PopupWindow的区别在哪里?为什么Dialog传入application的Context会报错?<br><br>
+
+        Dialog在创建时会新建一个PhoneWindow,同时也会使用DecoView作为这个PhoneWindow的根View,
+        相当于走了一遍Activity里创建PhoneWindow和DecoView的流程,而调用Dialog的show方法时,
+        类似于ActivityThread.performResumeActivity,将DecoView添加到Window,同时创建管理DecoView链的RootViewImpl来管理DecoView。<br><br>
+
+
+        PopupWindow就和第一个问题中<span class="red">getWindowManager().addView(mView,wl)</span>类似了,只是创建一条新的View链和ViewRootImpl,
+        并没有创建新的Window。而Dialog通过非Activity的Context,如Application 和 Service,这是因为Dialog通过传入的Context来得到context里的
+        mWindowManager(也就是WindowManagerImpl)与mToken,这是为了表明Dialog所属的Activity,在Window.addView时,需要这个mToken(IBinder对象),
+        而Application 和 Service传入的情况下Token是null。
+
+    </div>
+
+
+
+</div>
+
+
+</body>
+</html>

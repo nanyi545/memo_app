@@ -9,6 +9,10 @@
 					"type":"html"
 				},
 				{
+					"path":"android/activity_window_view/",
+					"type":"html"
+				},
+				{
 					"path":"android/OnRestoreInstanceState/",
 					"type":"txt"
 				},

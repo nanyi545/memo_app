@@ -1,0 +1,13 @@
+{
+	"data": 
+	[
+		{
+			"file":"content.html"
+
+		},
+		{
+			"file":"diagram1.png"
+
+		}
+	]
+}
