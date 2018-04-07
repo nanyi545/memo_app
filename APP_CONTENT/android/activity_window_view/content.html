@@ -65,10 +65,108 @@ windowManager.addView(myView, p);
     </code></pre>
 
 
+    <h3>开发艺术探索ch8</h3>
+    <div>
+        windowManager.addView() --> 添加了一个window<br>
+        window有三种类型，应用window（对应activity），子window（不能单独存在，需要依附父window），
+        系统window（需要权限才能创建，比如toast/系统状态栏）。<br>
+        window的z-order类似html中的z-index:window（1-99），子window（1000-1999），系统window（2000-2999）<br>
+        应用：可拖动view,重写ontouch方法<br>
+        <h4>window内部机制</h4>
+        windowManager.addView()/updateView()/removeView()的实现在WindowManagerImpl中（代理给WindowManagerGlobal实现）。<br>
+
+        mViews存储对应的view，mRoots存储对应的ViewRootImpl，mParams是对应的布局。
+        <pre><code>
+        114    private final ArrayList&lt;View> mViews = new ArrayList&lt;View>();
+        115    private final ArrayList&lt;ViewRootImpl> mRoots = new ArrayList&lt;ViewRootImpl>();
+        116    private final ArrayList&lt;WindowManager.LayoutParams> mParams = new ArrayList&lt;WindowManager.LayoutParams>();
+        </code></pre>
+
+                    WindowManagerImpl addView()<br>
+        首先检查参数是否合法
+        <pre><code>
+206        if (view == null) {
+207            throw new IllegalArgumentException("view must not be null");
+208        }
+209        if (display == null) {
+210            throw new IllegalArgumentException("display must not be null");
+211        }
+212        if (!(params instanceof WindowManager.LayoutParams)) {
+213            throw new IllegalArgumentException("Params must be WindowManager.LayoutParams");
+214        }
+215
+216        final WindowManager.LayoutParams wparams = (WindowManager.LayoutParams)params;
+217        if (parentWindow != null) {
+218            parentWindow.adjustLayoutParamsForSubWindow(wparams);
+219        }
+        </code></pre>
+
+        然后创建ViewRootImpl，并添加到列表中
+        <pre><code>
+        271            root = new ViewRootImpl(view.getContext(), display);
+        272
+        273            view.setLayoutParams(wparams);
+        274
+        275            mViews.add(view);
+        276            mRoots.add(root);
+        277            mParams.add(wparams);
+        </code></pre>
+
+        最后ViewRootImpl跟新界面，并且完成window添加（IPC过程，最终由WindowManagerService处理）
+
+
+    </div>
+
+
+    <br><br>
+
+
 
     <h3>diagram</h3>
     https://www.jianshu.com/p/c223b993b1ec
     <img id="myimage1" src="diagram1.png" class="myimgs">
+
+
+    <div>
+
+        1 Activity.attach()中创建PhoneWindow<br><br>
+        2  Activity.setContentView()中创建DecorView，将布局文件添加到DecorView的mContentParent中<br>
+        <pre><code>
+        Activity.setContentView()
+        public void setContentView(@LayoutRes int layoutResID) {
+        getWindow().setContentView(layoutResID);
+        initWindowDecorActionBar();
+        }
+
+        PhoneWindow.setContentView()
+        public void setContentView(int layoutResID) {
+        ...
+        installDecor();
+        ...
+        }
+
+        PhoneWindow.installDecor
+        private void installDecor() {
+        //根据不同的Theme,创建不同的DecorView,DecorView是一个FrameLayout
+        }
+        </code></pre>
+
+        3 activity.performResume()中调用activity.makeVisible,将DecorView添加到当前的Window上。
+        <pre><code>
+void makeVisible() {
+    if (!mWindowAdded) {
+        ViewManager wm = getWindowManager();
+        wm.addView(mDecor, getWindow().getAttributes());
+        mWindowAdded = true;
+    }
+    mDecor.setVisibility(View.VISIBLE);
+}
+        </code></pre>
+        WindowManager的addView的具体实现在WindowManagerImpl中,而WindowManagerImpl的addView又会调用WindowManagerGlobal.addView。
+        这个过程创建一个ViewRootImpl,并将之前创建的DecoView作为参数闯入,以后DecoView的事件都由ViewRootImpl来管理了,
+        比如DecoView上添加View,删除View。ViewRootImpl实现了ViewParent这个接口,这个接口最常见的一个方法是requestLayout(）。
+
+    </div><br><br>
 
     <div>
         --------Q1------------<br>
@@ -102,7 +200,16 @@ windowManager.addView(myView, p);
         mWindowManager(也就是WindowManagerImpl)与mToken,这是为了表明Dialog所属的Activity,在Window.addView时,需要这个mToken(IBinder对象),
         而Application 和 Service传入的情况下Token是null。
 
+    </div><br><br><br>
+
+    <div>
+        --------Q3------------<br>
+        ViewRootImpl是什么,一个Activity有多少个ViewRootImpl对象?<br><br>
+
+        ViewRootImpl是实际管理Window中View的类,每个Activity中ViewRootImpl数量取决于调用mWindowManager.addView的调用次数。
     </div>
+
+
 
 
 
