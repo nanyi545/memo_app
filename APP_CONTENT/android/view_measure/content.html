@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <style type="text/css">
+        .myimgs{  width:100%; height: auto; overflow:auto; }
+        .red{  color:red; }
+    </style>
+    <script></script>
+
+</head>
+<body>
+<script>
+</script>
+
+
+
+<div>
+
+
+    ViewRoot对应ViewRootImpl类，它是连接WindowManager和DecorView（top level view,FrameLayout）的纽带。在ActivityThread中，当Activity对象被创建后，会将DecorView添加到window中，同时会创建ViewRootImpl对象，并将ViewRootImpl与DecorView关联。<br><br>
+    --------------------- <br>
+
+
+    <h3>MeasureSpec</h3>
+    MeasureSpec   -->  2bit: mode ( UNSPECIFIED / EXACTLY --> match_parent|xx dp / AT_MOST  --> wrap_content )        30bit: size(in px)<br><br>
+    <pre><code>
+    int specMode = MeasureSpec.getMode(measureSpec);
+    int specSize = MeasureSpec.getSize(measureSpec);
+    </code></pre>
+    ---> layout params 和 父容器 一起才能决定 MeasureSpec<br>
+    ------> 对于DecorView, MeasureSpec由窗口尺寸和自身Params共同决定<br>
+    ------> 对于普通View，MeasureSpec由父容器MeasureSpec和自身Params共同决定<br><br>
+
+
+    --------------------
+    <h3>measure</h3>
+    <h4>step1</h4>
+    in parent: get measure spec for child  and call    child.measure(childWidthMeasureSpec, childHeightMeasureSpec) <br>
+    ----> for ViewRootImpl   ,   has field: mView<br>
+    对于DecorView, MeasureSpec由窗口尺寸和自身Params共同决定<br>
+
+    in measureHierarchy()<br>
+
+    <pre><code>
+    childWidthMeasureSpec = getRootMeasureSpec(desiredWindowWidth, lp.width);   //   lp.width  :   can be following    MATCH_PARENT / WRAP_CONTENT / size in px
+    childHeightMeasureSpec = getRootMeasureSpec(desiredWindowHeight, lp.height);
+    performMeasure(childWidthMeasureSpec, childHeightMeasureSpec);  ----->  mView.measure(childWidthMeasureSpec, childHeightMeasureSpec);
+
+    private static int getRootMeasureSpec(int windowSize, int rootDimension) {
+    2236        int measureSpec;
+    2237        switch (rootDimension) {
+    2238
+    2239        case ViewGroup.LayoutParams.MATCH_PARENT:
+    2240            // Window can't resize. Force root view to be windowSize.
+    2241            measureSpec = MeasureSpec.makeMeasureSpec(windowSize, MeasureSpec.EXACTLY);
+    2242            break;
+    2243        case ViewGroup.LayoutParams.WRAP_CONTENT:
+    2244            // Window can resize. Set max size for root view.
+    2245            measureSpec = MeasureSpec.makeMeasureSpec(windowSize, MeasureSpec.AT_MOST);
+    2246            break;
+    2247        default:
+    2248            // Window wants to be an exact size. Force root view to be that size.
+    2249            measureSpec = MeasureSpec.makeMeasureSpec(rootDimension, MeasureSpec.EXACTLY);
+    2250            break;
+    2251        }
+    2252        return measureSpec;
+    2253    }
+    </code></pre>
+
+
+    --> for normal View ( ViewGroup ) in ViewGroup
+
+    对于普通View，MeasureSpec由父容器MeasureSpec和自身Params共同决定
+
+    <pre><code>
+    summary of getChildMeasureSpec() method (equivalent of getRootMeasureSpec() )
+
+    +-----------+----------+-------------+------------+
+    |           | parent   |             |            |
+    |           | spec mode| exactly     | at_most    |
+    +-----------+----------+-------------+------------+
+    |child      |          |             |            |
+    |layoutParam|          |             |            |
+    +-----------+----------+-------------+------------+
+    |size       |          |             |            |
+    | dp/px     |          | exactly     | exactly    |
+    |           |          | child size  | child size |
+    +-----------+----------+-------------+------------+
+    |match_     |          |             |            |
+    |parent     |          | exactly     | at most    |
+    |           |          | parent size | parent size|
+    +-----------+----------+-------------+------------+
+    |wrap_      |          |             |            |
+    | content   |          | at most     | at most    |
+    |           |          | parent size | parent size|
+    +-----------+----------+-------------+------------+
+
+
+    ---------------------------------------------------------------------------------------------------------
+    </code></pre>
+
+    <h4>step2</h4>
+    view.measure(childWidthMeasureSpec, childHeightMeasureSpec)  (measure is final) --> call onMeasure(childWidthMeasureSpec, childHeightMeasureSpec)  in onMeasure: set size based on measure spec <br>
+
+    * view.measure(childWidthMeasureSpec, childHeightMeasureSpec)  call onMeasure(childWidthMeasureSpec, childHeightMeasureSpec), actual size is computed based on passed in measureSpecs <br>
+
+    * examples of onMeasure <br>
+    <pre><code>
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    int widthSpecMode = MeasureSpec.getMode(widthMeasureSpec);
+    int widthSpecSize = MeasureSpec.getSize(widthMeasureSpec);
+    int heightSpecMode = MeasureSpec.getMode(heightMeasureSpec);
+    int heightSpecSize = MeasureSpec.getSize(heightMeasureSpec);
+    if (widthSpecMode == MeasureSpec.AT_MOST
+    && heightSpecMode == MeasureSpec.AT_MOST) {
+    setMeasuredDimension(200, 200);
+    } else if (widthSpecMode == MeasureSpec.AT_MOST) {
+    setMeasuredDimension(200, heightSpecSize);
+    } else if (heightSpecMode == MeasureSpec.AT_MOST) {
+    setMeasuredDimension(widthSpecSize, 200);
+    }
+    }
+
+    int result=0;
+    int specMode = MeasureSpec.getMode(measureSpec);
+    int specSize = MeasureSpec.getSize(measureSpec);
+    switch (specMode){
+    case MeasureSpec.UNSPECIFIED:
+    result = defaultSize;
+    break;
+    case MeasureSpec.AT_MOST:   //  -----> wrap_content   !!!!!
+    result = Math.min(defaultSize, specSize);
+    break;
+    case MeasureSpec.EXACTLY:   // ---->  1  specifying size    2  match_parent  !!!!!!
+    result=specSize;   // spec Size is   in unit px  !!!
+    break;
+    }
+    </code></pre>
+
+    * View最终size在layout阶段确定，一般情况下measure size=最终size <br>
+    * for normal view :  only need to add MeasureSpec.AT_MOST(wrap_content) case ...<br><br><br>
+
+    * for viewgroups ---> different implementations of onMeasure<br>
+    1 measure all children<br>
+    2 set size for itself<br>
+    3 re-measure all "match_parent" children ( since "match_parent" children's size depend on parent size )<br>
+
+</div>
+
+
+</body>
+</html>
