@@ -163,8 +163,9 @@ void makeVisible() {
 }
         </code></pre>
         WindowManager的addView的具体实现在WindowManagerImpl中,而WindowManagerImpl的addView又会调用WindowManagerGlobal.addView。
-        这个过程创建一个ViewRootImpl,并将之前创建的DecoView作为参数闯入,以后DecoView的事件都由ViewRootImpl来管理了,
-        比如DecoView上添加View,删除View。ViewRootImpl实现了ViewParent这个接口,这个接口最常见的一个方法是requestLayout(）。
+        <span class="red">这个过程创建一个ViewRootImpl,并将之前创建的DecoView作为参数闯入,以后DecoView的事件都由ViewRootImpl来管理了,
+        比如DecoView上添加View,删除View。</span>
+        ViewRootImpl实现了ViewParent这个接口,这个接口最常见的一个方法是requestLayout(）。
 
     </div><br><br>
 

@@ -13,6 +13,10 @@
 					"type":"html"
 				},
 				{
+					"path":"android/view_measure/",
+					"type":"txt"
+				},
+				{
 					"path":"android/OnRestoreInstanceState/",
 					"type":"txt"
 				},
