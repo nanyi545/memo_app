@@ -1,0 +1,57 @@
+public class ThreadLocalTest {
+
+    private static final String TAG="THREAD_LOCAL_TEST";
+
+    private static ThreadLocal<Boolean> mBoolThreadLocal=new ThreadLocal<>();
+    
+    public static void test(){
+        new Thread("thread1"){
+            @Override
+            public void run() {
+                super.run();
+                mBoolThreadLocal.set(false);
+                Log.i(TAG,"thread1  saved value:"+mBoolThreadLocal.get());
+            }
+        }.start();
+        new Thread("thread2"){
+            @Override
+            public void run() {
+                super.run();
+                Log.i(TAG,"thread2  saved value:"+mBoolThreadLocal.get());
+            }
+        }.start();
+    }
+    
+}
+
+
+
+**  One possible (and common) use is when you have some object that is not thread-safe, but you want to avoid synchronizing access to that object (I'm looking at you, SimpleDateFormat). Instead, give each thread its own instance of the object.
+
+-------------source---------------------------------------
+
+***
+Entry[] tab = table;
+
+        private void set(ThreadLocal key, Object value) {
+
+            Entry[] tab = table;
+            int len = tab.length;
+            int i = key.threadLocalHashCode & (len-1);
+            ...
+            tab[i] = new Entry(key, value);
+	    ...
+
+        }
+
+
+        private Entry getEntry(ThreadLocal key) {
+            int i = key.threadLocalHashCode & (table.length - 1);
+            Entry e = table[i];
+            if (e != null && e.get() == key)
+                return e;
+            else
+                return getEntryAfterMiss(key, i, e);
+        }
+
+

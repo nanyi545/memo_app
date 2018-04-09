@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.nanyi545.www.memoapp.R;
 import com.nanyi545.www.memoapp.data.TotalIndex;
+import com.nanyi545.www.memoapp.tests.ThreadLocalTest;
 import com.nanyi545.www.memoapp.utils.FileDownloaderTask;
 import com.nanyi545.www.memoapp.utils.FilesManager;
 import com.nanyi545.www.memoapp.ui.detail_page.PageDetailActivity;
@@ -59,6 +60,8 @@ public class MainActivity extends Activity {
         mainRv.setLayoutManager(new LinearLayoutManager(this));
 
         loadMainIndex();
+
+        ThreadLocalTest.test();
 
     }
 
