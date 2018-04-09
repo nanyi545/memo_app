@@ -1,5 +1,7 @@
 package com.nanyi545.www.memoapp.tests;
 
+import android.os.Handler;
+import android.os.MessageQueue;
 import android.util.Log;
 
 /**
@@ -29,5 +31,7 @@ public class ThreadLocalTest {
             }
         }.start();
     }
+
+
 
 }

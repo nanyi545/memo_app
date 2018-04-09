@@ -1,0 +1,69 @@
+------------------------------------------------------------------------------
+
+MessageQueue 
+
+MessageQueue manages a Message queue with :   enqueueMessage()  /  next()  
+
+------------------------------------------------------------------------------
+
+
+
+------------------------------------------------------------------------------
+
+Looper
+
+
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                Looper.prepare();                //  create message queue
+                Handler handler=new Handler();   //  typical use of handler ... 
+                Looper.loop();                   //  run message queue
+            }
+        }.start();
+
+------------------------------------------------------------------------------
+
+
+
+
+------------------------------------------------------------------------------
+
+Handler
+
+sendMessage finally goes to ...
+
+    private boolean enqueueMessage(MessageQueue queue, Message msg, long uptimeMillis) {
+        msg.target = this;
+        if (mAsynchronous) {
+            msg.setAsynchronous(true);
+        }
+        return queue.enqueueMessage(msg, uptimeMillis);
+    }
+
+MessageQueue --> next() --> Looper --> Handler dispatchMessage() 
+
+
+    public void dispatchMessage(Message msg) {
+        if (msg.callback != null) {
+            handleCallback(msg);
+        } else {
+            if (mCallback != null) {
+                if (mCallback.handleMessage(msg)) {
+                    return;
+                }
+            }
+            handleMessage(msg);
+        }
+    }
+
+------------------------------------------------------------------------------
+
+ActivityThread.main() --> Looper.prepareMainLooper() ---> create main looper and message queue 
+
+------------------------------------------------------------------------------
+
+
+
+

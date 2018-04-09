@@ -14,6 +14,10 @@
 			"category_name":"android",
 			"category_data":[
 				{
+					"path":"android/handler/",
+					"type":"txt"
+				},
+				{
 					"path":"android/binder_aidl/",
 					"type":"html"
 				},
